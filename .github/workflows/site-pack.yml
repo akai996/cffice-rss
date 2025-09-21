@@ -29,7 +29,10 @@ jobs:
       - name: Sanity check required files
         run: |
           for f in sitemap.xml resources.html robots.txt; do
-            [ -f "$f" ] || { echo "::error file=$f::File not found"; exit 1; }
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::File not found"
+              exit 1
+            fi
           done
 
       - name: Set up Python
@@ -40,7 +43,7 @@ jobs:
       - name: Generate rss.xml from local sitemap.xml (robust)
         run: |
           python - <<'PY'
-import sys, datetime, re
+import sys, datetime
 from urllib.parse import urlparse
 from xml.sax.saxutils import escape
 import xml.etree.ElementTree as ET
@@ -55,15 +58,14 @@ def parse_sitemap(path):
     except Exception as e:
         print("WARN: failed to parse sitemap.xml:", e, file=sys.stderr)
         return []
-    # try with namespace
     urls = []
-    # 1) with ns
+    # with namespace
     for u in root.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url"):
         loc = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}loc") or "").strip()
         lastmod = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod") or "").strip()
         if loc:
             urls.append((loc, lastmod))
-    # 2) no ns fallback
+    # fallback without namespace
     if not urls:
         for u in root.findall("url"):
             loc = (u.findtext("loc") or "").strip()
@@ -73,70 +75,71 @@ def parse_sitemap(path):
     return urls
 
 urls = parse_sitemap(SITEMAP_PATH)
+
 tz = datetime.timezone(datetime.timedelta(hours=8))
 now = datetime.datetime.now(tz)
-now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S %z")
+last_build = now.strftime("%a, %d %b %Y %H:%M:%S %z")
 
 def to_rfc2822(s):
     s = (s or "").strip()
-    # accept YYYY-MM-DD or full ISO; fallback to now
     try:
         dt = datetime.datetime.strptime(s[:10], "%Y-%m-%d").replace(tzinfo=tz)
     except Exception:
         dt = now
     return dt.strftime("%a, %d %b %Y %H:%M:%S %z")
 
-items=[]
+items_xml = []
 if not urls:
-    # minimal feed to avoid pipeline failure
-    items.append(f"""  <item>
+    items_xml.append("""  <item>
     <title>Home</title>
     <link>https://www.cfiee-edu.com/</link>
     <guid isPermaLink="true">https://www.cfiee-edu.com/</guid>
-    <pubDate>{now_rfc2822}</pubDate>
+    <pubDate>{}</pubDate>
     <description>Change the status quo — economic education can change lives.</description>
-  </item>""")
+  </item>""".format(last_build))
 else:
-    for loc,lastmod in urls[:200]:
+    for loc, lastmod in urls[:200]:
         title = (urlparse(loc).path.strip('/') or 'Home').title()
         pub = to_rfc2822(lastmod)
-        items.append(f"""  <item>
-    <title>{escape(title)}</title>
-    <link>{escape(loc)}</link>
-    <guid isPermaLink="true">{escape(loc)}</guid>
+        items_xml.append("""  <item>
+    <title>{title}</title>
+    <link>{link}</link>
+    <guid isPermaLink="true">{link}</guid>
     <pubDate>{pub}</pubDate>
     <description>Change the status quo — economic education can change lives.</description>
-  </item>""")
+  </item>""".format(title=escape(title), link=escape(loc), pub=pub))
 
-rss=f"""<?xml version="1.0" encoding="UTF-8"?>
+rss = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>CFIEE · Council for International Economic Education</title>
     <link>https://www.cfiee-edu.com/</link>
     <description>Change the status quo — economic education can change lives.</description>
     <language>de</language>
-    <lastBuildDate>{now_rfc2822}</lastBuildDate>
-    <atom:link href="{RSS_PUBLIC_URL}" rel="self" type="application/rss+xml" />
-    <atom:link href="{HUB_URL}" rel="hub" />
-{chr(10).join(items)}
+    <lastBuildDate>{last_build}</lastBuildDate>
+    <atom:link href="{rss_url}" rel="self" type="application/rss+xml" />
+    <atom:link href="{hub_url}" rel="hub" />
+{items}
   </channel>
-</rss>"""
-open("rss.xml","w",encoding="utf-8").write(rss)
-print("rss.xml generated; items:", len(items))
+</rss>
+""".format(last_build=last_build, rss_url=RSS_PUBLIC_URL, hub_url=HUB_URL, items="\n".join(items_xml))
+
+with open("rss.xml","w",encoding="utf-8") as f:
+    f.write(rss)
+print("rss.xml generated; items:", len(items_xml))
 PY
 
       - name: Prepare dist folder
         run: |
           mkdir -p dist
           cp -f sitemap.xml resources.html robots.txt rss.xml dist/
-          [ -f README.md ] && cp -f README.md dist/ || true
+          if [ -f README.md ]; then cp -f README.md dist/; fi
           ls -l dist
 
       - name: Create and upload ZIP
         run: |
           cd dist
           zip -9r ../site-files-pack.zip ./*
-        shell: bash
       - uses: actions/upload-artifact@v4
         with:
           name: site-files-pack
