@@ -1,0 +1,93 @@
+name: Generate RSS from Remote Sitemap & Notify
+
+on:
+  schedule:        # 定时触发（每天 2 次）
+    - cron: "0 3,15 * * *"
+  workflow_dispatch:   # 手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate rss.xml from remote sitemap
+        run: |
+          python - <<'PY'
+import requests, datetime, xml.etree.ElementTree as ET
+from urllib.parse import urlparse
+from xml.sax.saxutils import escape
+
+SITEMAP_URL = "https://www.cfiee-edu.com/sitemap.xml"
+RSS_URL = "https://www.cfiee-edu.com/rss.xml"
+HUB_URL = "https://pubsubhubbub.appspot.com/"
+
+# 下载 sitemap.xml
+resp = requests.get(SITEMAP_URL, timeout=30)
+resp.raise_for_status()
+xml = resp.text
+root = ET.fromstring(xml)
+
+ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+urls = []
+for url in root.findall("sm:url", ns):
+    loc = url.findtext("sm:loc", default="", namespaces=ns).strip()
+    lastmod = url.findtext("sm:lastmod", default="", namespaces=ns).strip()
+    if loc:
+        urls.append((loc, lastmod))
+
+tz = datetime.timezone(datetime.timedelta(hours=8))
+now_rfc2822 = datetime.datetime.now(tz).strftime("%a, %d %b %Y %H:%M:%S %z")
+
+items = []
+for loc, lastmod in urls:
+    try:
+        dt = datetime.datetime.strptime(lastmod[:10], "%Y-%m-%d").replace(tzinfo=tz)
+        pub = dt.strftime("%a, %d %b %Y %H:%M:%S %z")
+    except Exception:
+        pub = now_rfc2822
+    items.append(f"""  <item>
+    <title>{escape(urlparse(loc).path.strip('/') or 'Home')}</title>
+    <link>{escape(loc)}</link>
+    <guid isPermaLink="true">{escape(loc)}</guid>
+    <pubDate>{pub}</pubDate>
+    <description>Change the status quo — economic education can change lives.</description>
+  </item>""")
+
+rss = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CFIEE · Council for International Economic Education</title>
+    <link>https://www.cfiee-edu.com/</link>
+    <description>Change the status quo — economic education can change lives.</description>
+    <language>de</language>
+    <lastBuildDate>{now_rfc2822}</lastBuildDate>
+    <atom:link href="{RSS_URL}" rel="self" type="application/rss+xml" />
+    <atom:link href="{HUB_URL}" rel="hub" />
+{chr(10).join(items)}
+  </channel>
+</rss>"""
+
+open("rss.xml", "w", encoding="utf-8").write(rss)
+print("rss.xml generated with", len(items), "items")
+PY
+
+      - name: Upload artifact (for debug, optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: rss
+          path: rss.xml
+
+      - name: Notify PubSubHubbub Hub
+        run: |
+          curl -sS -X POST https://pubsubhubbub.appspot.com/notify \
+               --data-urlencode "hub.mode=publish" \
+               --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
+
+      - name: Ping Google & Bing Sitemap
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
+          curl -s "https://www.bing.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
