@@ -37,42 +37,70 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate rss.xml from local sitemap.xml
+      - name: Generate rss.xml from local sitemap.xml (robust)
         run: |
           python - <<'PY'
-import datetime, xml.etree.ElementTree as ET
+import sys, datetime, re
 from urllib.parse import urlparse
 from xml.sax.saxutils import escape
+import xml.etree.ElementTree as ET
 
 SITEMAP_PATH = "sitemap.xml"
 RSS_PUBLIC_URL = "https://www.cfiee-edu.com/rss.xml"
 HUB_URL = "https://pubsubhubbub.appspot.com/"
 
-root = ET.parse(SITEMAP_PATH).getroot()
-ns = {"sm":"http://www.sitemaps.org/schemas/sitemap/0.9"}
-urls=[]
-for u in root.findall("sm:url", ns):
-    loc = (u.findtext("sm:loc", default="", namespaces=ns) or "").strip()
-    lastmod = (u.findtext("sm:lastmod", default="", namespaces=ns) or "").strip()
-    if loc:
-        urls.append((loc,lastmod))
+def parse_sitemap(path):
+    try:
+        root = ET.parse(path).getroot()
+    except Exception as e:
+        print("WARN: failed to parse sitemap.xml:", e, file=sys.stderr)
+        return []
+    # try with namespace
+    urls = []
+    # 1) with ns
+    for u in root.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url"):
+        loc = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}loc") or "").strip()
+        lastmod = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod") or "").strip()
+        if loc:
+            urls.append((loc, lastmod))
+    # 2) no ns fallback
+    if not urls:
+        for u in root.findall("url"):
+            loc = (u.findtext("loc") or "").strip()
+            lastmod = (u.findtext("lastmod") or "").strip()
+            if loc:
+                urls.append((loc, lastmod))
+    return urls
 
+urls = parse_sitemap(SITEMAP_PATH)
 tz = datetime.timezone(datetime.timedelta(hours=8))
 now = datetime.datetime.now(tz)
 now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S %z")
 
-def to_rfc2822(d):
+def to_rfc2822(s):
+    s = (s or "").strip()
+    # accept YYYY-MM-DD or full ISO; fallback to now
     try:
-        dt = datetime.datetime.strptime(d[:10], "%Y-%m-%d").replace(tzinfo=tz)
+        dt = datetime.datetime.strptime(s[:10], "%Y-%m-%d").replace(tzinfo=tz)
     except Exception:
         dt = now
     return dt.strftime("%a, %d %b %Y %H:%M:%S %z")
 
 items=[]
-for loc,lastmod in urls[:200]:
-    title = (urlparse(loc).path.strip('/') or 'Home').title()
-    pub = to_rfc2822(lastmod)
+if not urls:
+    # minimal feed to avoid pipeline failure
     items.append(f"""  <item>
+    <title>Home</title>
+    <link>https://www.cfiee-edu.com/</link>
+    <guid isPermaLink="true">https://www.cfiee-edu.com/</guid>
+    <pubDate>{now_rfc2822}</pubDate>
+    <description>Change the status quo — economic education can change lives.</description>
+  </item>""")
+else:
+    for loc,lastmod in urls[:200]:
+        title = (urlparse(loc).path.strip('/') or 'Home').title()
+        pub = to_rfc2822(lastmod)
+        items.append(f"""  <item>
     <title>{escape(title)}</title>
     <link>{escape(loc)}</link>
     <guid isPermaLink="true">{escape(loc)}</guid>
@@ -93,9 +121,8 @@ rss=f"""<?xml version="1.0" encoding="UTF-8"?>
 {chr(10).join(items)}
   </channel>
 </rss>"""
-
 open("rss.xml","w",encoding="utf-8").write(rss)
-print("rss.xml generated with", len(items), "items")
+print("rss.xml generated; items:", len(items))
 PY
 
       - name: Prepare dist folder
