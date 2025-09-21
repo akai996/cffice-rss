@@ -1,4 +1,15 @@
-- name: Generate rss.xml from local sitemap.xml
+name: Site Pack Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate rss.xml from local sitemap.xml
         run: |
           set -euo pipefail
           cat > script.py << 'EOF'
@@ -67,5 +78,5 @@
           Path("rss.xml").write_text(rss, encoding="utf-8")
           print("rss.xml generated with", len(items), "items")
           EOF
-
+          
           python script.py
