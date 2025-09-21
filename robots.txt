@@ -1,0 +1,40 @@
+# robots.txt for https://www.cfiee-edu.com/
+# Last updated: 2025-09-19 (Asia/Taipei)
+
+# Default rules
+User-agent: *
+Allow: /
+# Block common system or duplicate paths (adjust if these don't exist on your site)
+Disallow: /admin/
+Disallow: /login/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /search
+# Keep tracking parameters out of the index
+Disallow: /*?*utm_*
+Disallow: /*?*fbclid=*
+
+# Make sure static assets are crawlable for proper rendering
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+Allow: /*.woff$
+Allow: /*.woff2$
+
+# Explicitly allow the public resources aggregation page
+Allow: /resources.html
+
+# Be nice to Bing (Google ignores Crawl-delay)
+User-agent: Bingbot
+Crawl-delay: 5
+
+# Sitemaps
+Sitemap: https://www.cfiee-edu.com/sitemap.xml
+
+# (Optional) Yandex-specific host hint
+# Host: www.cfiee-edu.com

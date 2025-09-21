@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <meta name="description" content="Index of CFIEE-related articles, videos, and social links, grouped by date for quick access and search.">
+  <meta name="robots" content="index,follow">
+
+  <title>Resource Index · Grouped by Date</title>
+
+  <style>
+    :root{
+      --headH: 56px;
+      --bg:#0b0c0f;
+      --card:#12141a;
+      --muted:#98a2b3;
+      --text:#e5e7eb;
+      --accent:#7dd3fc;
+      --link:#93c5fd;
+      --border:#1f2430;
+      --chip:#0ea5e9;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#ffffff;
+        --card:#f7f8fb;
+        --muted:#475569;
+        --text:#0f172a;
+        --accent:#0284c7;
+        --link:#0b5bd3;
+        --border:#e5e7eb;
+        --chip:#0284c7;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg); color:var(--text);
+    }
+    .wrap{max-width:1080px;margin:0 auto;padding:24px}
+    header{position:sticky;top:0;background:linear-gradient(180deg,var(--bg),color-mix(in oklab,var(--bg) 80%, transparent));backdrop-filter:saturate(1.2) blur(8px);z-index:5;border-bottom:1px solid var(--border)}
+    header .bar{display:flex;gap:14px;align-items:center;padding:12px 24px;max-width:1080px;margin:0 auto}
+    h1{font-size:20px;margin:0;letter-spacing:.3px}
+    .chip{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:color-mix(in oklab,var(--chip) 15%, var(--bg));color:var(--text)}
+    .tools{display:flex;gap:10px;align-items:center;margin-left:auto}
+    .search{flex:1;max-width:380px}
+    .search input{
+      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);
+      outline:none;
+    }
+    .content{padding-top:10px}
+    section.day{border:1px solid var(--border);border-radius:16px;background:var(--card);margin:16px 0;overflow:hidden}
+    .day header{position:relative;top:auto;background:transparent;border-bottom:1px solid var(--border)}
+    .day h2{font-size:16px;margin:0;padding:14px 16px}
+
+    /* Per-section toggle */
+    section.day header{display:flex;align-items:center;gap:10px;cursor:pointer}
+    .toggle{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:22px;height:22px;border:1px solid var(--border);border-radius:8px;
+      background:color-mix(in oklab,var(--card) 85%, transparent);
+    }
+    .toggle svg{width:14px;height:14px;transition:transform .18s ease}
+    section.day.collapsed .toggle svg{transform:rotate(-90deg)}
+
+    section.day header{cursor:pointer;display:flex;align-items:center;gap:8px}
+    section.day header .arrow{transition:transform 0.2s ease;font-size:14px}
+    section.day.collapsed header .arrow{transform:rotate(-90deg)}
+
+    .list{list-style:none;margin:0;padding:10px 8px 16px 8px;display:grid;grid-template-columns:1fr;gap:6px}
+    @media(min-width:720px){.list{grid-template-columns:1fr 1fr}}
+    .link-row{
+      display:flex;align-items:center;gap:10px;border:1px dashed var(--border);border-radius:12px;padding:10px 12px;background:linear-gradient(180deg, color-mix(in oklab,var(--card) 92%, #000 8%), var(--card));
+    }
+    .num{min-width:34px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid var(--border);font-variant-numeric:tabular-nums;background:color-mix(in oklab,var(--card) 70%, var(--accent) 30%)}
+    .url{word-break:break-all;flex:1}
+    .btns{display:flex;gap:8px}
+    button{
+      appearance:none;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer;
+    }
+    button:hover{border-color:var(--accent)}
+    .muted{color:var(--muted);font-size:12px}
+    .toc{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+    .toc.sticky{position:sticky;top: calc(var(--headH, 56px) + env(safe-area-inset-top));z-index:4;background:linear-gradient(180deg,var(--bg),color-mix(in oklab,var(--bg) 85%, transparent));backdrop-filter:saturate(1.1) blur(6px);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:8px}
+
+    .toc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .toc-actions button{
+      appearance:none;border:1px solid var(--border);background:var(--bg);color:var(--text);
+      padding:6px 10px;border-radius:10px;cursor:pointer;font-size:12px;
+    }
+    .toc-actions button:hover{border-color:var(--accent)}
+    section.day.collapsed .list{display:none}
+    section.day.collapsed header{border-bottom:none}
+
+    .toc.sticky a{margin:4px 6px}
+
+    .toc a{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;text-decoration:none;color:var(--link);background:color-mix(in oklab,var(--card) 85%, transparent)}
+    .empty{padding:16px}
+    .note{font-size:12px;margin-top:6px}
+    a.link-open{ text-decoration:none }
+
+    /* TOC compact floating card on scroll */
+    .toc.sticky{transition: padding .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, border-radius .18s ease}
+    .toc.sticky.compact{
+      padding:8px 10px;
+      border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,.12);
+      background:linear-gradient(180deg, var(--bg), color-mix(in oklab,var(--bg) 70%, transparent));
+    }
+
+
+    /* --- Fixed header override to ensure always visible --- */
+    body{padding-top: calc(var(--headH, 56px) + 8px);}
+    body > header{
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999 !important;
+    }
+
+
+    /* Header compact mode on scroll */
+    body > header{transition: background .18s ease, box-shadow .18s ease, border-color .18s ease}
+    body > header .bar{transition: padding .18s ease}
+    body > header.compact{box-shadow:0 8px 20px rgba(0,0,0,.12); background:linear-gradient(180deg,var(--bg),color-mix(in oklab,var(--bg) 70%, transparent))}
+    body > header.compact .bar{padding:8px 16px}
+
+
+    /* Compact mode tweaks for search input */
+    body > header.compact .tools.search{max-width:300px}
+    body > header.compact .tools.search input{
+      padding:8px 10px;
+      border-radius:8px;
+      max-width:280px;
+    }
+
+
+    /* Compact mode tweaks for TOC action buttons */
+    .toc.sticky.compact .toc-actions{gap:6px;margin-bottom:6px}
+    .toc.sticky.compact .toc-actions button{
+      padding:4px 8px;
+      border-radius:8px;
+      font-size:11px;
+    }
+    .toc.sticky.compact a{padding:4px 8px}
+
+
+    /* TOC actions: icon-only in compact mode, accessible text kept for screen readers */
+    .toc.sticky.compact .toc-actions button{
+      width:28px;height:28px;padding:0;margin:0;
+      font-size:0; line-height:1;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+    .toc.sticky.compact .toc-actions button::before{
+      font-size:14px; line-height:1;
+    }
+    .toc.sticky.compact .toc-actions button[data-action="collapse"]::before{ content:"⤵︎"; }
+    .toc.sticky.compact .toc-actions button[data-action="expand"]::before{ content:"⤴︎"; }
+    .toc.sticky.compact .toc-actions button[data-action="reset"]::before{ content:"⟳"; }
+
+
+    /* --- TOC alignment fixes: icon buttons & date chips vertically centered --- */
+    .toc{align-items:center}
+    .toc .toc-actions{align-items:center;margin-bottom:0}
+    .toc .toc-actions button{box-sizing:border-box}
+    /* make date chips align like buttons */
+    .toc a{display:inline-flex;align-items:center;line-height:1}
+    .toc.sticky.compact a{min-height:28px}
+
+
+    /* --- TOC compact fine alignment & cleanup --- */
+    /* Hide legacy toggleAll button if still present */
+/* Unify heights between icon buttons and date chips */
+    .toc.sticky.compact .toc-actions button{
+      width:26px;height:26px; /* was 28 */
+    }
+    .toc.sticky.compact a{
+      min-height:26px; /* match buttons */
+      padding:4px 8px; /* slightly tighter */
+    }
+    .toc{align-items:center}
+    .toc .toc-actions{align-items:center;margin-bottom:0}
+    .toc .toc-actions button{box-sizing:border-box}
+    .toc a{display:inline-flex;align-items:center;line-height:1}
+
+
+    /* Expand/Collapse arrow states (distinct icons) */
+    section.day header .arrow{
+      width:1.1em;height:1.1em;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:0; margin-right:4px;
+      transform:none !important;
+    }
+    section.day header .arrow::before{
+      content:"▾"; /* expanded */
+      font-size:14px; line-height:1;
+    }
+    section.day.collapsed header .arrow{ transform:none !important; }
+    section.day.collapsed header .arrow::before{
+      content:"▸"; /* collapsed */
+    }
+
+
+    /* Mobile tweak: tighter arrow spacing on small screens */
+    @media (max-width: 640px){
+      section.day header .arrow{ margin-right:2px }
+    }
+
+
+    /* Mobile tweak: slightly smaller date headers */
+    @media (max-width: 640px){
+      .day h2{ font-size:15px }
+    }
+
+
+    /* Mobile tweak: slightly smaller HTML Sitemap header */
+    @media (max-width: 640px){
+      #html-sitemap h2{ font-size:15px }
+    }
+
+
+    /* Mobile tweak: tighter date chips & icons */
+    @media (max-width: 640px){
+      .toc{ gap:6px }
+      .toc a{ padding:4px 6px }                  /* was ~6px 10px */
+      .toc.sticky.compact a{
+        padding:3px 6px; min-height:24px         /* tighter in compact */
+      }
+      .toc.sticky.compact .toc-actions button{
+        width:24px; height:24px                  /* match chip height */
+      }
+    }
+
+
+    /* Force hide HTML Sitemap list when collapsed (override inline display if present) */
+    #html-sitemap.day.collapsed .site-card .list{ display:none !important }
+
+
+    /* Strong collapse rule for HTML Sitemap (with or without .site-card) */
+    #html-sitemap.day.collapsed .list,
+    #html-sitemap.day.collapsed .site-card .list{
+      display:none !important;
+    }
+    /* Ensure arrow text node is hidden; rely on ::before icons */
+    section.day header .arrow{ font-size:0 !important }
+
+
+    /* HTML Sitemap unified card */
+    #html-sitemap.day{ border:none; background:transparent; padding:0 }
+    #html-sitemap .site-card{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:var(--card);
+      overflow:hidden;
+    }
+    #html-sitemap .site-card > header{ border-bottom:1px solid var(--border) }
+    #html-sitemap .site-card .list{ padding:12px 16px }
+    /* Collapse behavior */
+    #html-sitemap.day.collapsed .site-card .list{ display:none !important }
+
+
+    /* Hide real arrow text in span; use ::before icons instead */
+    section.day header .arrow{ font-size:0 }
+
+    /* Pagination controls */
+    .pager{
+      display:flex;align-items:center;gap:8px;
+      padding:8px 12px;border-top:1px solid var(--border);
+      background:linear-gradient(180deg, color-mix(in oklab,var(--card) 96%, transparent), var(--card));
+    }
+    .pager .spacer{flex:1}
+    .pager button{
+      appearance:none;border:1px solid var(--border);background:var(--bg);color:var(--text);
+      padding:6px 10px;border-radius:10px;cursor:pointer;font-size:12px;
+    }
+    .pager button:hover{border-color:var(--accent)}
+    .pager .info{font-size:12px;color:var(--muted)}
+    .pager-size{display:flex;align-items:center;gap:6px;margin-left:auto}
+    .pager-size select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:4px 6px;font-size:12px}
+
+
+    /* TOC per-page select as pill */
+    .toc .toc-actions #perpage{
+      appearance:none; -webkit-appearance:none; -moz-appearance:none;
+      border:1px solid var(--border);
+      background:var(--bg);
+      color:var(--text);
+      height:32px; min-width:56px;
+      padding:0 12px;
+      border-radius:999px;
+      font-size:12px;
+      line-height:32px;
+      cursor:pointer;
+    }
+    .toc .toc-actions #perpage:hover{ border-color:var(--accent) }
+    /* compact mode */
+    .toc.sticky.compact .toc-actions #perpage{
+      height:28px; min-width:50px; padding:0 10px; font-size:11px;
+    }
+    @media (max-width: 640px){
+      .toc .toc-actions #perpage{ height:28px; min-width:50px; padding:0 10px; font-size:11px }
+    }
+
+
+    /* === TOC Controls Unification (buttons / per-page select / date chips) === */
+    :root{
+      --toc-h: 32px;      /* default height */
+      --toc-pad-x: 12px;  /* horizontal padding */
+      --toc-fs: 12px;     /* font size */
+    }
+    /* Compact mode shrinks controls */
+    .toc.sticky.compact{
+      --toc-h: 28px;
+      --toc-pad-x: 10px;
+      --toc-fs: 11px;
+    }
+    @media (max-width: 640px){
+      .toc{
+        --toc-h: 28px;
+        --toc-pad-x: 10px;
+        --toc-fs: 11px;
+      }
+    }
+    /* Buttons */
+    .toc .toc-actions button{
+      height: var(--toc-h);
+      min-width: calc(var(--toc-h) + 4px);
+      padding: 0 var(--toc-pad-x);
+      border-radius: 999px;
+      font-size: var(--toc-fs);
+      line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    /* Per-page select as pill */
+    .toc .toc-actions #perpage{
+      height: var(--toc-h);
+      min-width: 56px;
+      padding: 0 var(--toc-pad-x);
+      border-radius: 999px;
+      font-size: var(--toc-fs);
+      line-height: 1;
+      appearance:none; -webkit-appearance:none; -moz-appearance:none;
+      border:1px solid var(--border);
+      background:var(--bg); color:var(--text);
+      display: inline-flex; align-items: center;
+    }
+    .toc .toc-actions #perpage:hover{ border-color: var(--accent) }
+    /* Date chips */
+    .toc a{
+      display: inline-flex; align-items: center; justify-content:center;
+      min-height: var(--toc-h);
+      padding: 0 var(--toc-pad-x);
+      line-height: 1;
+      border-radius: 999px;
+    }
+
+
+    /* Center the Per page <select> value and unify with TOC chips/buttons */
+    .toc .toc-actions #perpage{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height: var(--toc-h, 32px);
+      padding: 0 var(--toc-pad-x, 12px);
+      border-radius: 999px;
+      font-size: var(--toc-fs, 12px);
+      line-height: 1;
+      text-align: center;
+    }
+    .toc.sticky.compact .toc-actions #perpage{
+      height: var(--toc-h, 28px);
+    }
+    @media (max-width: 640px){
+      .toc .toc-actions #perpage{
+        height: var(--toc-h, 28px);
+      }
+    }
+
+  </style>
+
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "dateModified": "2025-09-21T06:18:53+08:00", "itemListElement": [{"@type": "ListItem", "position": 1, "url": "https://www.youtube.com/watch?v=Si5xlE2ggho"}, {"@type": "ListItem", "position": 2, "url": "https://www.youtube.com/watch?v=9BcjMey0kJ4"}, {"@type": "ListItem", "position": 3, "url": "https://vimeo.com/1119212698"}, {"@type": "ListItem", "position": 4, "url": "https://vimeo.com/1119207115"}, {"@type": "ListItem", "position": 5, "url": "https://x.com/cfieeeducom/status/1968052216100687914"}, {"@type": "ListItem", "position": 6, "url": "https://x.com/cfieeeducom/status/1968056160436752866"}, {"@type": "ListItem", "position": 7, "url": "https://pin.it/7wOLmlnUc"}, {"@type": "ListItem", "position": 8, "url": "https://pin.it/2IBAGpCRr"}, {"@type": "ListItem", "position": 9, "url": "https://www.tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen?source=share"}, {"@type": "ListItem", "position": 10, "url": "https://www.tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit?source=share"}, {"@type": "ListItem", "position": 11, "url": "https://www.facebook.com/share/p/1CRtVyy2XX/"}, {"@type": "ListItem", "position": 12, "url": "https://www.podbean.com/eas/pb-6vh8c-19690c1"}, {"@type": "ListItem", "position": 13, "url": "https://cfiee.medium.com/cfiee-education-impact-%C3%BCber-10-000-sch%C3%BCler-profitieren-von-innovativen-lernprogrammen-896742fecab2"}, {"@type": "ListItem", "position": 14, "url": "https://cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1"}, {"@type": "ListItem", "position": 15, "url": "https://www.reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button"}, {"@type": "ListItem", "position": 16, "url": "https://zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widerstandsfahigkeit-von-familien-durch-cfiee/"}, {"@type": "ListItem", "position": 17, "url": "https://cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/"}, {"@type": "ListItem", "position": 18, "url": "https://techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/"}, {"@type": "ListItem", "position": 19, "url": "https://tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/"}, {"@type": "ListItem", "position": 20, "url": "https://tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/"}, {"@type": "ListItem", "position": 21, "url": "https://technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/"}, {"@type": "ListItem", "position": 22, "url": "https://technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/"}, {"@type": "ListItem", "position": 23, "url": "https://weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/"}, {"@type": "ListItem", "position": 24, "url": "https://websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/"}, {"@type": "ListItem", "position": 25, "url": "https://thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/"}, {"@type": "ListItem", "position": 26, "url": "https://bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/"}, {"@type": "ListItem", "position": 27, "url": "https://amv-akademie.de/cfiee-finanzielle-bildung-%c2%b7-gemeinschaftskraft/"}, {"@type": "ListItem", "position": 28, "url": "https://focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/"}, {"@type": "ListItem", "position": 29, "url": "https://chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/"}, {"@type": "ListItem", "position": 30, "url": "https://buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/"}, {"@type": "ListItem", "position": 31, "url": "https://foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/"}, {"@type": "ListItem", "position": 32, "url": "https://giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/"}, {"@type": "ListItem", "position": 33, "url": "https://n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/"}, {"@type": "ListItem", "position": 34, "url": "https://gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/"}, {"@type": "ListItem", "position": 35, "url": "https://gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/"}, {"@type": "ListItem", "position": 36, "url": "https://ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/"}, {"@type": "ListItem", "position": 37, "url": "https://alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/"}, {"@type": "ListItem", "position": 38, "url": "https://dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/"}, {"@type": "ListItem", "position": 39, "url": "https://youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/"}, {"@type": "ListItem", "position": 40, "url": "https://quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/"}, {"@type": "ListItem", "position": 41, "url": "https://howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/"}, {"@type": "ListItem", "position": 42, "url": "https://thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/"}, {"@type": "ListItem", "position": 43, "url": "https://archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/"}, {"@type": "ListItem", "position": 44, "url": "https://resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/"}, {"@type": "ListItem", "position": 45, "url": "https://umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/"}, {"@type": "ListItem", "position": 46, "url": "https://fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/"}, {"@type": "ListItem", "position": 47, "url": "https://flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/"}, {"@type": "ListItem", "position": 48, "url": "https://freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/"}, {"@type": "ListItem", "position": 49, "url": "https://globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/"}, {"@type": "ListItem", "position": 50, "url": "https://greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/"}, {"@type": "ListItem", "position": 51, "url": "https://heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/"}, {"@type": "ListItem", "position": 52, "url": "https://herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/"}, {"@type": "ListItem", "position": 53, "url": "https://hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/"}, {"@type": "ListItem", "position": 54, "url": "https://ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/"}, {"@type": "ListItem", "position": 55, "url": "https://iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/"}, {"@type": "ListItem", "position": 56, "url": "https://kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/"}, {"@type": "ListItem", "position": 57, "url": "https://kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/"}, {"@type": "ListItem", "position": 58, "url": "https://kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/"}, {"@type": "ListItem", "position": 59, "url": "https://liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/"}, {"@type": "ListItem", "position": 60, "url": "https://lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/"}, {"@type": "ListItem", "position": 61, "url": "https://mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/"}, {"@type": "ListItem", "position": 62, "url": "https://mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/"}, {"@type": "ListItem", "position": 63, "url": "https://ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/"}, {"@type": "ListItem", "position": 64, "url": "https://potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/"}, {"@type": "ListItem", "position": 65, "url": "https://reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/"}, {"@type": "ListItem", "position": 66, "url": "https://sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/"}, {"@type": "ListItem", "position": 67, "url": "https://schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/"}, {"@type": "ListItem", "position": 68, "url": "https://schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/"}, {"@type": "ListItem", "position": 69, "url": "https://seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-die-sichtweise-des-cfiee/"}, {"@type": "ListItem", "position": 70, "url": "https://stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/"}, {"@type": "ListItem", "position": 71, "url": "https://snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/"}, {"@type": "ListItem", "position": 72, "url": "https://eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/"}, {"@type": "ListItem", "position": 73, "url": "https://fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/"}, {"@type": "ListItem", "position": 74, "url": "https://englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/"}, {"@type": "ListItem", "position": 75, "url": "https://erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/"}]}</script>
+
+  <meta property="og:updated_time" content="2025-09-21T06:18:53+08:00">
+  <meta name="last-modified" content="2025-09-21T06:18:53+08:00">
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <h1>Resource Index</h1>
+      <span class="chip">Grouped by Date</span> <span class="chip updated" id="last-updated" data-built="2025-09-21T06:18:53+08:00">Updated: 2025-09-21 06:18 (UTC+8)</span>
+      <div class="tools search"><input id="q" placeholder="Search links (filter by date/domain/path)"></div>
+    </div>
+  </header>
+
+  <div class="wrap content">
+    <div class="toc sticky" id="toc"><a href="#d-2025-09-17">2025-09-17</a><a href="#d-2025-09-19">2025-09-19</a></div>
+
+  <section class="day" id="d-2025-09-17" data-date="2025-09-17">
+    <header><h2><span class="arrow">▶</span>2025-09-17</h2></header>
+    <div class="list">
+      <div class="link-row" data-url="https://www.youtube.com/watch?v=Si5xlE2ggho"><span class="num">01</span><span class="url">https://www.youtube.com/watch?v=Si5xlE2ggho</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.youtube.com/watch?v=Si5xlE2ggho" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.youtube.com/watch?v=9BcjMey0kJ4"><span class="num">02</span><span class="url">https://www.youtube.com/watch?v=9BcjMey0kJ4</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.youtube.com/watch?v=9BcjMey0kJ4" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://vimeo.com/1119212698"><span class="num">03</span><span class="url">https://vimeo.com/1119212698</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://vimeo.com/1119212698" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://vimeo.com/1119207115"><span class="num">04</span><span class="url">https://vimeo.com/1119207115</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://vimeo.com/1119207115" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://x.com/cfieeeducom/status/1968052216100687914"><span class="num">05</span><span class="url">https://x.com/cfieeeducom/status/1968052216100687914</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://x.com/cfieeeducom/status/1968052216100687914" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://x.com/cfieeeducom/status/1968056160436752866"><span class="num">06</span><span class="url">https://x.com/cfieeeducom/status/1968056160436752866</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://x.com/cfieeeducom/status/1968056160436752866" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://pin.it/7wOLmlnUc"><span class="num">07</span><span class="url">https://pin.it/7wOLmlnUc</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://pin.it/7wOLmlnUc" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://pin.it/2IBAGpCRr"><span class="num">08</span><span class="url">https://pin.it/2IBAGpCRr</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://pin.it/2IBAGpCRr" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen?source=share"><span class="num">09</span><span class="url">https://www.tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen?source=share</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen?source=share" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit?source=share"><span class="num">10</span><span class="url">https://www.tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit?source=share</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit?source=share" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.facebook.com/share/p/1CRtVyy2XX/"><span class="num">11</span><span class="url">https://www.facebook.com/share/p/1CRtVyy2XX/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.facebook.com/share/p/1CRtVyy2XX/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.podbean.com/eas/pb-6vh8c-19690c1"><span class="num">12</span><span class="url">https://www.podbean.com/eas/pb-6vh8c-19690c1</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.podbean.com/eas/pb-6vh8c-19690c1" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://cfiee.medium.com/cfiee-education-impact-%C3%BCber-10-000-sch%C3%BCler-profitieren-von-innovativen-lernprogrammen-896742fecab2"><span class="num">13</span><span class="url">https://cfiee.medium.com/cfiee-education-impact-%C3%BCber-10-000-sch%C3%BCler-profitieren-von-innovativen-lernprogrammen-896742fecab2</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://cfiee.medium.com/cfiee-education-impact-%C3%BCber-10-000-sch%C3%BCler-profitieren-von-innovativen-lernprogrammen-896742fecab2" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1"><span class="num">14</span><span class="url">https://cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://www.reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button"><span class="num">15</span><span class="url">https://www.reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://www.reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+    </div>
+  </section>
+
+  <section class="day" id="d-2025-09-19" data-date="2025-09-19">
+    <header><h2><span class="arrow">▶</span>2025-09-19</h2></header>
+    <div class="list">
+      <div class="link-row" data-url="https://zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widerstandsfahigkeit-von-familien-durch-cfiee/"><span class="num">01</span><span class="url">https://zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widerstandsfahigkeit-von-familien-durch-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widerstandsfahigkeit-von-familien-durch-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/"><span class="num">02</span><span class="url">https://cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/"><span class="num">03</span><span class="url">https://techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/"><span class="num">04</span><span class="url">https://tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/"><span class="num">05</span><span class="url">https://tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/"><span class="num">06</span><span class="url">https://technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/"><span class="num">07</span><span class="url">https://technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/"><span class="num">08</span><span class="url">https://weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/"><span class="num">09</span><span class="url">https://websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/"><span class="num">10</span><span class="url">https://thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/"><span class="num">11</span><span class="url">https://bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://amv-akademie.de/cfiee-finanzielle-bildung-%c2%b7-gemeinschaftskraft/"><span class="num">12</span><span class="url">https://amv-akademie.de/cfiee-finanzielle-bildung-%c2%b7-gemeinschaftskraft/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://amv-akademie.de/cfiee-finanzielle-bildung-%c2%b7-gemeinschaftskraft/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/"><span class="num">13</span><span class="url">https://focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/"><span class="num">14</span><span class="url">https://chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/"><span class="num">15</span><span class="url">https://buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/"><span class="num">16</span><span class="url">https://foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/"><span class="num">17</span><span class="url">https://giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/"><span class="num">18</span><span class="url">https://n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/"><span class="num">19</span><span class="url">https://gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/"><span class="num">20</span><span class="url">https://gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/"><span class="num">21</span><span class="url">https://ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/"><span class="num">22</span><span class="url">https://alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/"><span class="num">23</span><span class="url">https://dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/"><span class="num">24</span><span class="url">https://youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/"><span class="num">25</span><span class="url">https://quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/"><span class="num">26</span><span class="url">https://howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/"><span class="num">27</span><span class="url">https://thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/"><span class="num">28</span><span class="url">https://archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/"><span class="num">29</span><span class="url">https://resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/"><span class="num">30</span><span class="url">https://umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+    </div>
+  </section>
+    <div class="note muted">Tip: Click "Copy" to quickly copy links; type keywords to filter (e.g., <code>youtube</code> or <code>2025-09-17</code>).</div>  <section class="day" id="d-2025-09-20" data-date="2025-09-20">
+    <header><h2><span class="arrow">▶</span>2025-09-20</h2></header>
+    <div class="list">
+      <div class="link-row" data-url="https://fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/"><span class="num">01</span><span class="url">https://fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/"><span class="num">02</span><span class="url">https://flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/"><span class="num">03</span><span class="url">https://freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/"><span class="num">04</span><span class="url">https://globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/"><span class="num">05</span><span class="url">https://greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/"><span class="num">06</span><span class="url">https://heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/"><span class="num">07</span><span class="url">https://herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/"><span class="num">08</span><span class="url">https://hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/"><span class="num">09</span><span class="url">https://ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/"><span class="num">10</span><span class="url">https://iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/"><span class="num">11</span><span class="url">https://kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/"><span class="num">12</span><span class="url">https://kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/"><span class="num">13</span><span class="url">https://kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/"><span class="num">14</span><span class="url">https://liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/"><span class="num">15</span><span class="url">https://lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/"><span class="num">16</span><span class="url">https://mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/"><span class="num">17</span><span class="url">https://mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/"><span class="num">18</span><span class="url">https://ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/"><span class="num">19</span><span class="url">https://potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/"><span class="num">20</span><span class="url">https://reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/"><span class="num">21</span><span class="url">https://sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/"><span class="num">22</span><span class="url">https://schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/"><span class="num">23</span><span class="url">https://schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-die-sichtweise-des-cfiee/"><span class="num">24</span><span class="url">https://seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-die-sichtweise-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-die-sichtweise-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/"><span class="num">25</span><span class="url">https://stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/"><span class="num">26</span><span class="url">https://snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/"><span class="num">27</span><span class="url">https://eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/"><span class="num">28</span><span class="url">https://fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/"><span class="num">29</span><span class="url">https://englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+      <div class="link-row" data-url="https://erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/"><span class="num">30</span><span class="url">https://erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/</span><div class="btns"><button class="copy" title="Copy link">Copy</button><a class="link-open" href="https://erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/" target="_blank" rel="noopener noreferrer"><button title="Open in new window">Open</button></a></div></div>
+    </div>
+  </section>
+
+
+  <section id="html-sitemap" class="day collapsed" style="margin-top:24px">
+    <div class="site-card"><header><h2><span class="arrow">▾</span>HTML Sitemap · All Links</h2></header><div class="list">
+      <ul style="margin:0;padding-left:18px;line-height:1.7">
+      <li><a href="https://www.youtube.com/watch?v=Si5xlE2ggho" target="_blank" rel="noopener noreferrer">youtube.com/watch</a></li>
+      <li><a href="https://www.youtube.com/watch?v=9BcjMey0kJ4" target="_blank" rel="noopener noreferrer">youtube.com/watch</a></li>
+      <li><a href="https://vimeo.com/1119212698" target="_blank" rel="noopener noreferrer">vimeo.com/1119212698</a></li>
+      <li><a href="https://vimeo.com/1119207115" target="_blank" rel="noopener noreferrer">vimeo.com/1119207115</a></li>
+      <li><a href="https://x.com/cfieeeducom/status/1968052216100687914" target="_blank" rel="noopener noreferrer">x.com/cfieeeducom/status/1968052216100687914</a></li>
+      <li><a href="https://x.com/cfieeeducom/status/1968056160436752866" target="_blank" rel="noopener noreferrer">x.com/cfieeeducom/status/1968056160436752866</a></li>
+      <li><a href="https://pin.it/7wOLmlnUc" target="_blank" rel="noopener noreferrer">pin.it/7wOLmlnUc</a></li>
+      <li><a href="https://pin.it/2IBAGpCRr" target="_blank" rel="noopener noreferrer">pin.it/2IBAGpCRr</a></li>
+      <li><a href="https://www.tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen?source=share" target="_blank" rel="noopener noreferrer">tumblr.com/cfiee/794883280959881216/2025-cfiee-coinvitax-die-zukunft-der-globalen</a></li>
+      <li><a href="https://www.tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit?source=share" target="_blank" rel="noopener noreferrer">tumblr.com/cfiee/794884505799376896/cfiee-coinvitax-aufbau-einer-zukunft-mit</a></li>
+      <li><a href="https://www.facebook.com/share/p/1CRtVyy2XX/" target="_blank" rel="noopener noreferrer">facebook.com/share/p/1CRtVyy2XX/</a></li>
+      <li><a href="https://www.podbean.com/eas/pb-6vh8c-19690c1" target="_blank" rel="noopener noreferrer">podbean.com/eas/pb-6vh8c-19690c1</a></li>
+      <li><a href="https://cfiee.medium.com/cfiee-education-impact-%C3%BCber-10-000-sch%C3%BCler-profitieren-von-innovativen-lernprogrammen-896742fecab2" target="_blank" rel="noopener noreferrer">cfiee.medium.com/cfiee-education-impact-über-10-000-schüler-profitieren-von-innovativen-lernprogrammen-896742fecab2</a></li>
+      <li><a href="https://cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1" target="_blank" rel="noopener noreferrer">cfiee.medium.com/cfiee-launches-ultima-x-ai-powered-tool-driving-innovation-in-education-and-research-4ebfd7d1f3b1</a></li>
+      <li><a href="https://www.reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/?utm_source=share&amp;amp;utm_medium=web3x&amp;amp;utm_name=web3xcss&amp;amp;utm_term=1&amp;amp;utm_content=share_button" target="_blank" rel="noopener noreferrer">reddit.com/user/Leather_Fudge_3631/comments/1nix8pq/wie_cfiee_und_coinvitax_ihre_programme_zur/</a></li>
+      <li><a href="https://zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widerstandsfahigkeit-von-familien-durch-cfiee/" target="_blank" rel="noopener noreferrer">zuhauseverlassen.de/bildung-ist-keine-ausgabe-sondern-eine-strategie-zur-risikominderung-starkung-der-widersta…</a></li>
+      <li><a href="https://cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/" target="_blank" rel="noopener noreferrer">cicero-galerie.de/cfiee-finanzielle-bildung-als-greifbare-investition-betrachten/</a></li>
+      <li><a href="https://techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/" target="_blank" rel="noopener noreferrer">techiestock.de/die-globale-perspektive-von-cfiee-verbindung-lokaler-praxis-mit-internationaler-erfahrung/</a></li>
+      <li><a href="https://tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/" target="_blank" rel="noopener noreferrer">tagesschaufy.de/neue-ansatze-in-der-bildung-cfiee-verwandelt-wirtschaftliche-kompetenz-in-umsetzbare-werkzeuge/</a></li>
+      <li><a href="https://tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/" target="_blank" rel="noopener noreferrer">tagesschauf.de/einfuhrung-in-die-kmu-finanzierung-cfiee-starkung-des-lokalen-start-up-okosystems/</a></li>
+      <li><a href="https://technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/" target="_blank" rel="noopener noreferrer">technikx.de/cfiee-auswirkungen-eine-grafik-zum-verstandnis-unserer-wichtigsten-ergebnisse-und-nachsten-schritte/</a></li>
+      <li><a href="https://technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/" target="_blank" rel="noopener noreferrer">technikzon.de/uberprufung-der-starkung-von-frauen-wie-cfiee-weibliche-lernende-und-unternehmerinnen-unterstutzt/</a></li>
+      <li><a href="https://weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/" target="_blank" rel="noopener noreferrer">weltv.de/partnerschaftsbeispiel-wie-universitaten-cfiee-module-in-kreditfahige-kurse-integrieren/</a></li>
+      <li><a href="https://websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/" target="_blank" rel="noopener noreferrer">websiie.de/lokale-banken-und-cfiee-pilotprojekt-zu-sparanreizen-in-verbindung-mit-finanzieller-bildung/</a></li>
+      <li><a href="https://thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/" target="_blank" rel="noopener noreferrer">thegadgetly.de/cfiee-schulung-zu-personlichen-finanzen-und-entscheidungsfindung-die-leben-verandert/</a></li>
+      <li><a href="https://bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/" target="_blank" rel="noopener noreferrer">bileed.de/cfiee-veranderung-beginnt-mit-dem-verstandnis-von-geld/</a></li>
+      <li><a href="https://amv-akademie.de/cfiee-finanzielle-bildung-%c2%b7-gemeinschaftskraft/" target="_blank" rel="noopener noreferrer">amv-akademie.de/cfiee-finanzielle-bildung-·-gemeinschaftskraft/</a></li>
+      <li><a href="https://focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/" target="_blank" rel="noopener noreferrer">focusz.de/cfiee-eine-praktische-plattform-fur-wirtschaftliche-bildung-und-finanzkompetenz/</a></li>
+      <li><a href="https://chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/" target="_blank" rel="noopener noreferrer">chippz.de/cfiee-meistern-sie-ihre-personlichen-finanzen-verbessern-sie-ihr-leben/</a></li>
+      <li><a href="https://buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/" target="_blank" rel="noopener noreferrer">buzzgram.de/cfiee-grundlegende-schulung-zu-finanz-und-geschaftsentscheidungen-speziell-auf-unternehmer-zugeschnitten/</a></li>
+      <li><a href="https://foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/" target="_blank" rel="noopener noreferrer">foxgeek.de/cfiee-familienfinanzen-beginnen-mit-der-nachsten-generation/</a></li>
+      <li><a href="https://giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/" target="_blank" rel="noopener noreferrer">giizmo.de/cfiee-messbare-finanzbildung-evidenzbasierte-veranderung/</a></li>
+      <li><a href="https://n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/" target="_blank" rel="noopener noreferrer">n-tvz.de/cfiee-mit-wissen-angst-in-selbstvertrauen-verwandeln/</a></li>
+      <li><a href="https://gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/" target="_blank" rel="noopener noreferrer">gmxzz.de/cfiee-vom-einzelnen-zur-gemeinschaft-die-auswirkungen-der-finanziellen-bildung/</a></li>
+      <li><a href="https://gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/" target="_blank" rel="noopener noreferrer">gizmohouse.de/cfiee-programme-zum-finanziellen-wohlergehen-der-mitarbeiter-stress-reduzieren-leistung-verbessern/</a></li>
+      <li><a href="https://ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/" target="_blank" rel="noopener noreferrer">ktp-price.de/cfiee-finanzielle-bildung-eine-politische-prioritat-die-nicht-ubersehen-werden-sollte/</a></li>
+      <li><a href="https://alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/" target="_blank" rel="noopener noreferrer">alumni-germany.de/aufbau-widerstandsfahiger-haushalte-durch-intelligente-budgetplanung-erkenntnisse-der-cfiee/</a></li>
+      <li><a href="https://dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/" target="_blank" rel="noopener noreferrer">dog-goes.de/jugendliche-uber-den-umgang-mit-geld-aufklaren-der-early-start-ansatz-des-cfiee/</a></li>
+      <li><a href="https://youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/" target="_blank" rel="noopener noreferrer">youtubez.de/digitale-tools-fur-finanzkompetenz-wie-cfiee-das-lernen-online-ermoglicht/</a></li>
+      <li><a href="https://quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/" target="_blank" rel="noopener noreferrer">quotesz.de/warum-kleine-ersparnisse-grose-veranderungen-bewirken-erkenntnisse-der-cfiee/</a></li>
+      <li><a href="https://howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/" target="_blank" rel="noopener noreferrer">howtodelete.de/ausbildung-von-padagogen-zu-finanzberatern-ein-cfiee-programm-im-fokus/</a></li>
+      <li><a href="https://thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/" target="_blank" rel="noopener noreferrer">thetagesschau.de/generationen-verbinden-durch-gesprache-uber-familienfinanzen-mit-cfiee/</a></li>
+      <li><a href="https://archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/" target="_blank" rel="noopener noreferrer">archaeo-kontrakt.de/finanzielle-kompetenzen-fur-kleinunternehmer-praktische-hilfe-von-cfiee/</a></li>
+      <li><a href="https://resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/" target="_blank" rel="noopener noreferrer">resound-records.de/die-psychologie-des-geldes-und-klugere-entscheidungen-erklart-von-cfiee/</a></li>
+      <li><a href="https://umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/" target="_blank" rel="noopener noreferrer">umtsflatvergleich.de/finanzielle-fehler-in-lernmoglichkeiten-verwandeln-die-methode-von-cfiee/</a></li>
+      
+      <li><a href="https://fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/" target="_blank" rel="noopener noreferrer">fitterkader.de/finanzielle-bildung-im-landlichen-raum-fur-integratives-wachstum-eine-initiative-der-cfiee/</a></li>
+      <li><a href="https://flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/" target="_blank" rel="noopener noreferrer">flairforfaces.de/schutz-der-daten-von-lernenden-in-der-finanzbildung-das-datenschutzversprechen-der-cfiee/</a></li>
+      <li><a href="https://freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/" target="_blank" rel="noopener noreferrer">freechatgpt.de/von-der-angst-zur-selbstbestimmung-die-erfahrungen-von-lernenden-mit-cfiee-programmen/</a></li>
+      <li><a href="https://globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/" target="_blank" rel="noopener noreferrer">globaleblockchain.de/wie-cfiee-gemeinden-beim-aufbau-gemeinsamer-notfallfonds-unterstutzt/</a></li>
+      <li><a href="https://greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/" target="_blank" rel="noopener noreferrer">greenlinecannibis.de/nachhaltiges-leben-trifft-auf-finanzbildung-eine-perspektive-des-cfiee/</a></li>
+      <li><a href="https://heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/" target="_blank" rel="noopener noreferrer">heimeligemode.de/verantwortungsbewusste-kreditaufnahme-praktische-lehren-aus-cfiee/</a></li>
+      <li><a href="https://herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/" target="_blank" rel="noopener noreferrer">herrhaustiere.de/storytelling-als-lehrmittel-in-der-finanzbildung-das-cfiee-modell/</a></li>
+      <li><a href="https://hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/" target="_blank" rel="noopener noreferrer">hotelsleben.de/frauen-fuhren-die-haushaltskasse-geschichten-unterstutzt-von-cfiee/</a></li>
+      <li><a href="https://ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/" target="_blank" rel="noopener noreferrer">ichliebehaustier.de/mit-den-schulungsmodulen-des-cfiee-vertrauen-in-die-grundlagen-des-investierens-aufbauen/</a></li>
+      <li><a href="https://iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/" target="_blank" rel="noopener noreferrer">iilovepdf.de/messung-der-sozialen-rendite-von-finanzbildung-der-ansatz-des-cfiee/</a></li>
+      <li><a href="https://kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/" target="_blank" rel="noopener noreferrer">kreditgruppe.de/steuern-fur-alle-verstandlich-machen-das-lern-toolkit-der-cfiee/</a></li>
+      <li><a href="https://kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/" target="_blank" rel="noopener noreferrer">kryptobuzz.de/supporting-migrant-workers-through-financial-skills-a-cfiee-focus/</a></li>
+      <li><a href="https://kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/" target="_blank" rel="noopener noreferrer">kryptomatrix.de/forderung-des-unternehmertums-bei-jugendlichen-wie-cfiee-zukunftige-fuhrungskrafte-ausbildet/</a></li>
+      <li><a href="https://liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/" target="_blank" rel="noopener noreferrer">liebezurmode.de/der-zusammenhang-zwischen-finanziellen-gewohnheiten-und-psychischer-gesundheit-aufgezeigt-vom-cfiee/</a></li>
+      <li><a href="https://lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/" target="_blank" rel="noopener noreferrer">lipsticklover.de/unternehmenspartnerschaften-erweiterung-der-finanzbildung-mit-cfiee/</a></li>
+      <li><a href="https://mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/" target="_blank" rel="noopener noreferrer">mefabulous.de/vertrauen-in-gemeinschaften-durch-gemeinsames-lernen-aufbauen-cfiee-geschichten/</a></li>
+      <li><a href="https://mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/" target="_blank" rel="noopener noreferrer">mitliebelehren.de/finanzielle-bildung-fur-die-gig-economy-die-unterstutzung-des-cfiee-fur-freiberufler/</a></li>
+      <li><a href="https://ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/" target="_blank" rel="noopener noreferrer">ntvd.de/den-kreislauf-der-armut-durch-finanzielle-bildung-durchbrechen-die-wirkung-von-cfiee/</a></li>
+      <li><a href="https://potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/" target="_blank" rel="noopener noreferrer">potplayground.de/finanzwissen-in-den-alltag-integrieren-die-offentlichkeitsarbeit-des-cfiee/</a></li>
+      <li><a href="https://reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/" target="_blank" rel="noopener noreferrer">reiseenergie.de/alumni-networks-that-keep-financial-education-alive-powered-by-cfiee/</a></li>
+      <li><a href="https://sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/" target="_blank" rel="noopener noreferrer">sarkariresults.de/finanzielle-bildung-als-lebenslanger-prozess-erfolgsgeschichten-von-cfiee-absolventen/</a></li>
+      <li><a href="https://schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/" target="_blank" rel="noopener noreferrer">schickernomade.de/wie-cfiee-workshops-die-unterrichtsmethoden-im-klassenzimmer-verandern/</a></li>
+      <li><a href="https://schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/" target="_blank" rel="noopener noreferrer">schlechtehaustiere.de/gemeinschaftspartnerschaften-die-finanzkompetenz-fordern-cfiee-in-aktion/</a></li>
+      <li><a href="https://seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-die-sichtweise-des-cfiee/" target="_blank" rel="noopener noreferrer">seeleentdecken.de/die-rolle-der-finanziellen-bildung-bei-der-reduzierung-der-verschuldung-privater-haushalte-d…</a></li>
+      <li><a href="https://stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/" target="_blank" rel="noopener noreferrer">stilimrampenlicht.de/cfiee-und-technologie-menschliche-betreuung-mit-digitalen-plattformen-verbinden/</a></li>
+      <li><a href="https://snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/" target="_blank" rel="noopener noreferrer">snaptikk.de/warum-alle-eltern-an-einer-cfiee-familienfinanzsitzung-teilnehmen-sollten/</a></li>
+      <li><a href="https://eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/" target="_blank" rel="noopener noreferrer">eleganterstil.de/lokaler-fallbeispiel-wie-eine-stadt-mithilfe-von-cfiee-schulungen-ihre-ersparnisse-steigerte/</a></li>
+      <li><a href="https://fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/" target="_blank" rel="noopener noreferrer">fabrikpassen.de/aufbau-wirtschaftlicher-burgerschaft-durch-finanzielle-bildung-mit-cfiee/</a></li>
+      <li><a href="https://englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/" target="_blank" rel="noopener noreferrer">englischefabrik.de/die-kraft-des-zinseszinses-freisetzen-der-lehransatz-des-cfiee/</a></li>
+      <li><a href="https://erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/" target="_blank" rel="noopener noreferrer">erzieherecke.de/finanzielle-zuversicht-ist-ansteckend-geschichten-von-cfiee-lernenden/</a></li></ul>
+    </div></div>
+  </section>
+</div>
+
+  <script>
+    // Copy buttons
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button.copy');
+      if(btn){
+        const row = btn.closest('.link-row');
+        const url = row?.dataset?.url || '';
+        if(url){
+          navigator.clipboard.writeText(url).then(()=>{
+            btn.textContent = 'Copied';
+            setTimeout(()=>btn.textContent='Copy', 1200);
+          });
+        }
+      }
+    });
+
+    // Search / filter
+    const q = document.getElementById('q');
+    const days = [...document.querySelectorAll('section.day')];
+    function filter(){
+      const v = (q.value || '').trim().toLowerCase();
+      days.forEach(day=>{
+        const date = day.dataset.date.toLowerCase();
+        const rows = [...day.querySelectorAll('.link-row')];
+        let visibleCount = 0;
+        rows.forEach(r=>{
+          const url = (r.dataset.url || '').toLowerCase();
+          const txt = (r.querySelector('.url')?.textContent || '').toLowerCase();
+          const show = !v || url.includes(v) || date.includes(v) || txt.includes(v);
+          r.style.display = show ? '' : 'none';
+          if(show) visibleCount++;
+        });
+        day.style.display = (visibleCount>0) ? '' : 'none';
+      });
+    }
+    q.addEventListener('input', filter);
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script>
+    // Auto-generate TOC with counts + Expand/Collapse controls + per-section toggles + persistence + reset
+    (function(){
+      const STORAGE_KEY = 'resources_day_collapse_state_v1';
+
+      function loadState(){
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+        catch(e){ return {}; }
+      }
+      function saveState(state){
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+      }
+      function clearState(){
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+      }
+
+      const toc = document.getElementById('toc');
+      const sections = Array.from(document.querySelectorAll('section.day:not(:last-child)'));
+
+      // Apply persisted state
+      const state = loadState();
+      sections.forEach(sec=>{
+        const d = sec.dataset.date || '';
+        if(state[d]) sec.classList.add('collapsed');
+        else sec.classList.remove('collapsed');
+      });
+
+      // Build TOC with actions + counts
+      if(toc){
+        const actions = document.createElement('div');
+        actions.className = 'toc-actions';
+        const btnCollapse = document.createElement('button');
+      btnCollapse.textContent = 'Collapse All';
+      btnCollapse.setAttribute('data-action','collapse');
+      btnCollapse.setAttribute('aria-label','Collapse All');
+      btnCollapse.title = 'Collapse All';
+        const btnExpand = document.createElement('button');
+        btnExpand.textContent = 'Expand All';
+        btnExpand.setAttribute('data-action','expand');
+        btnExpand.setAttribute('aria-label','Expand All');
+        btnExpand.title = 'Expand All';
+        const btnReset = document.createElement('button');
+        btnReset.textContent = 'Reset';
+        btnReset.setAttribute('data-action','reset');
+        btnReset.setAttribute('aria-label','Reset');
+        btnReset.title = 'Reset';
+
+        actions.appendChild(btnCollapse);
+        actions.appendChild(btnExpand);
+        actions.appendChild(btnReset);
+
+        const frag = document.createDocumentFragment();
+        frag.appendChild(actions);
+
+        sections.forEach(sec=>{
+          const d = sec.dataset.date || '';
+          const n = sec.querySelectorAll('.link-row').length;
+          const a = document.createElement('a');
+          a.href = '#d-' + d;
+          a.textContent = n ? `${d}(${n})` : d;
+          if(n){ a.title = `Total ${n} links`; } else { return; }
+          frag.appendChild(a);
+        });
+
+        toc.innerHTML = '';
+        toc.appendChild(frag);
+
+        // Global controls update state
+        btnCollapse.addEventListener('click', ()=>{
+          sections.forEach(sec=>{
+            sec.classList.add('collapsed');
+            const d = sec.dataset.date || '';
+            if(d) state[d] = true;
+          });
+          saveState(state);
+        });
+        btnExpand.addEventListener('click', ()=>{
+          sections.forEach(sec=>{
+            sec.classList.remove('collapsed');
+            const d = sec.dataset.date || '';
+            if(d) state[d] = false;
+          });
+          saveState(state);
+        });
+        btnReset.addEventListener('click', ()=>{
+          // Clear persisted state and expand all
+          clearState();
+          sections.forEach(sec=>sec.classList.remove('collapsed'));
+          // Also refresh local state object
+          Object.keys(state).forEach(k=>delete state[k]);
+        });
+      }
+
+      // Per-section toggle: clicking header toggles collapsed state and persists
+      sections.forEach(sec=>{
+        const hdr = sec.querySelector('header');
+        if(!hdr) return;
+        hdr.addEventListener('click', (e)=>{
+          if(e.target.closest('a')) return; // ignore anchor clicks in header
+          sec.classList.toggle('collapsed');
+          const d = sec.dataset.date || '';
+          if(d){
+            const collapsed = sec.classList.contains('collapsed');
+            state[d] = collapsed;
+            saveState(state);
+          }
+        });
+      });
+    })();
+  </script>
+<script>
+    // Dynamic sticky offset: keep TOC under sticky header at all times
+    (function(){
+      const root = document.documentElement;
+      const headerEl = document.querySelector('body > header');
+      function updateHeadH(){
+        if(!headerEl) return;
+        const h = Math.ceil(headerEl.getBoundingClientRect().height) || 56;
+        root.style.setProperty('--headH', h + 'px');
+      }
+      // Init + listen
+      window.addEventListener('load', updateHeadH);
+      window.addEventListener('resize', updateHeadH);
+      try{
+        new ResizeObserver(updateHeadH).observe(headerEl);
+      }catch(e){/* ignore on old browsers */}
+      // Fallback: update after fonts load
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(updateHeadH);
+      }
+    })();
+  </script>
+
+  <script>
+    // TOC compact on scroll
+    (function(){
+      const toc = document.getElementById('toc');
+      if(!toc) return;
+      function headH(){
+        const v = getComputedStyle(document.documentElement).getPropertyValue('--headH') || '56px';
+        const n = parseInt(v, 10);
+        return isNaN(n) ? 56 : n;
+      }
+      function update(){
+        const threshold = headH() + 32; // a little gap below header
+        if(window.scrollY > threshold){
+          toc.classList.add('compact');
+        }else{
+          toc.classList.remove('compact');
+        }
+      }
+      window.addEventListener('scroll', update, {passive:true});
+      window.addEventListener('resize', update);
+      window.addEventListener('load', update);
+      update();
+    })();
+  </script>
+
+  <script>
+    // Header compact on scroll
+    (function(){
+      const hdr = document.querySelector('body > header');
+      if(!hdr) return;
+      function update(){
+        hdr.classList.toggle('compact', window.scrollY > 20);
+      }
+      window.addEventListener('scroll', update, {passive:true});
+      window.addEventListener('load', update);
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
+
+  <script>
+    // Toggle search placeholder for compact header
+    (function(){
+      const hdr = document.querySelector('body > header');
+      const inp = document.getElementById('q');
+      if(!hdr || !inp) return;
+      const LONG_PH = 'Search links (filter by date/domain/path)';
+      const SHORT_PH = 'Search links';
+      function applyPH(){
+        inp.placeholder = hdr.classList.contains('compact') ? SHORT_PH : LONG_PH;
+      }
+      // Observe header class changes
+      try{ new MutationObserver(applyPH).observe(hdr, {attributes:true, attributeFilter:['class']}); }catch(e){}
+      window.addEventListener('scroll', applyPH, {passive:true});
+      window.addEventListener('resize', applyPH);
+      window.addEventListener('load', applyPH);
+      applyPH();
+    })();
+  </script>
+
+  <script>
+    // Ensure HTML Sitemap card toggles correctly
+    (function(){
+      const sec = document.getElementById('html-sitemap');
+      if(!sec) return;
+
+        // Global controls update state
+        
+      const hdr = sec.querySelector('.site-card > header') || sec.querySelector('header');
+      if(!hdr) return;
+      if(!hdr.dataset._toggleBound){
+        hdr.dataset._toggleBound = '1';
+        hdr.style.cursor = 'pointer';
+        hdr.addEventListener('click', (e)=>{
+          if(e.target.closest('a,button,input,select,textarea')) return;
+          sec.classList.toggle('collapsed');
+          try{
+            const key='resources_day_collapse_state_v1';
+            const state=JSON.parse(localStorage.getItem(key)||'{}');
+            state['HTML_SITEMAP']=sec.classList.contains('collapsed');
+            localStorage.setItem(key, JSON.stringify(state));
+          }catch(e){}
+        });
+      }
+    })();
+  </script>
+
+
+  <script>
+    // Pagination (per section) with global "Per page" selector
+    (function(){
+      const PERPAGE_KEY = 'resources_pager_perpage';
+      let perPage = parseInt(localStorage.getItem(PERPAGE_KEY) || '10', 10);
+      const days = [...document.querySelectorAll('section.day')];
+
+      // create per-page selector in TOC actions if exists
+      const toc = document.getElementById('toc');
+      if(toc){
+        let actions = toc.querySelector('.toc-actions');
+        if(!actions){
+          actions = document.createElement('div');
+          actions.className = 'toc-actions';
+          toc.prepend(actions);
+        }
+        const wrap = document.createElement('div');
+        wrap.className = 'pager-size';
+        wrap.innerHTML = '<select id="perpage" aria-label="Per page"><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option></select>';
+        actions.appendChild(wrap);
+        const sel = wrap.querySelector('#perpage');
+        sel.value = String(perPage);
+        sel.addEventListener('change', ()=>{
+          perPage = parseInt(sel.value, 10);
+          localStorage.setItem(PERPAGE_KEY, String(perPage));
+          days.forEach(sec=>paginateSection(sec, false));
+        });
+      }
+
+      // expose paginateSection for filter()
+      window.paginateSection = function(section, keepPage){
+        const list = section.querySelector('.list');
+        if(!list) return;
+
+        // remove existing pager
+        const old = section.querySelector('.pager');
+        if(old) old.remove();
+
+        const rows = [...list.querySelectorAll('.link-row')];
+        // determine visible rows by filter flag
+        const visibleRows = rows.filter(r => (r.dataset.filtered || '0') !== '1');
+
+        // show all if fits
+        if(visibleRows.length <= perPage || perPage <= 0){
+          rows.forEach(r=>{
+            const filtered = (r.dataset.filtered || '0') === '1';
+            r.style.display = filtered ? 'none' : '';
+          });
+          return;
+        }
+
+        // current page (1-based)
+        let page = parseInt(section.dataset.page || '1', 10);
+        if(!keepPage) page = 1;
+        const totalPages = Math.max(1, Math.ceil(visibleRows.length / perPage));
+        if(page > totalPages) page = totalPages;
+        if(page < 1) page = 1;
+        section.dataset.page = String(page);
+
+        const start = (page - 1) * perPage;
+        const end = start + perPage;
+        const onPage = new Set(visibleRows.slice(start, end));
+
+        rows.forEach(r=>{
+          const filtered = (r.dataset.filtered || '0') === '1';
+          if(filtered){
+            r.style.display = 'none';
+          }else{
+            r.style.display = onPage.has(r) ? '' : 'none';
+          }
+        });
+
+        // build pager UI
+        const pager = document.createElement('div');
+        pager.className = 'pager';
+
+        const btnFirst = document.createElement('button'); btnFirst.textContent = '⏮';
+        const btnPrev  = document.createElement('button'); btnPrev.textContent  = '←';
+        const info     = document.createElement('span');   info.className = 'info';
+        info.textContent = `Page ${page} / ${totalPages}`;
+        const btnNext  = document.createElement('button'); btnNext.textContent  = '→';
+        const btnLast  = document.createElement('button'); btnLast.textContent  = '⏭';
+
+        function goto(p){
+          section.dataset.page = String(p);
+          paginateSection(section, true);
+          // keep scroll position roughly
+          section.scrollIntoView({block:'start', behavior:'smooth'});
+        }
+
+        btnFirst.addEventListener('click', ()=> goto(1));
+        btnPrev .addEventListener('click', ()=> goto(Math.max(1, page-1)));
+        btnNext .addEventListener('click', ()=> goto(Math.min(totalPages, page+1)));
+        btnLast .addEventListener('click', ()=> goto(totalPages));
+
+        pager.appendChild(btnFirst);
+        pager.appendChild(btnPrev);
+        pager.appendChild(info);
+        pager.appendChild(btnNext);
+        pager.appendChild(btnLast);
+
+        list.after(pager);
+      };
+
+      // init: mark all rows as not filtered and paginate
+      days.forEach(sec=>{
+        const rows = sec.querySelectorAll('.link-row');
+        rows.forEach(r=>{ if(!r.dataset.filtered) r.dataset.filtered = '0'; });
+        paginateSection(sec, false);
+      });
+    })();
+  </script>
+
+</body>
+</html>
