@@ -1,0 +1,165 @@
+name: Build RSS & Package site files (zip only) + optional notify
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'sitemap.xml'
+      - 'resources.html'
+      - 'robots.txt'
+      - 'README.md'
+      - '.github/workflows/site-pack.yml'
+  workflow_dispatch:
+    inputs:
+      notify_after_deploy:
+        description: '运维已部署到官网后，是否通知 Hub + Ping 搜索引擎？(true/false)'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Sanity check required files
+        run: |
+          for f in sitemap.xml resources.html robots.txt; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::File not found"
+              exit 1
+            fi
+          done
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate rss.xml from local sitemap.xml (robust)
+        run: |
+          python - <<'PY'
+import sys, datetime
+from urllib.parse import urlparse
+from xml.sax.saxutils import escape
+import xml.etree.ElementTree as ET
+
+SITEMAP_PATH = "sitemap.xml"
+RSS_PUBLIC_URL = "https://www.cfiee-edu.com/rss.xml"
+HUB_URL = "https://pubsubhubbub.appspot.com/"
+
+def parse_sitemap(path):
+    try:
+        root = ET.parse(path).getroot()
+    except Exception as e:
+        print("WARN: failed to parse sitemap.xml:", e, file=sys.stderr)
+        return []
+    urls = []
+    # with namespace
+    for u in root.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url"):
+        loc = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}loc") or "").strip()
+        lastmod = (u.findtext("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod") or "").strip()
+        if loc:
+            urls.append((loc, lastmod))
+    # fallback without namespace
+    if not urls:
+        for u in root.findall("url"):
+            loc = (u.findtext("loc") or "").strip()
+            lastmod = (u.findtext("lastmod") or "").strip()
+            if loc:
+                urls.append((loc, lastmod))
+    return urls
+
+urls = parse_sitemap(SITEMAP_PATH)
+
+tz = datetime.timezone(datetime.timedelta(hours=8))
+now = datetime.datetime.now(tz)
+last_build = now.strftime("%a, %d %b %Y %H:%M:%S %z")
+
+def to_rfc2822(s):
+    s = (s or "").strip()
+    try:
+        dt = datetime.datetime.strptime(s[:10], "%Y-%m-%d").replace(tzinfo=tz)
+    except Exception:
+        dt = now
+    return dt.strftime("%a, %d %b %Y %H:%M:%S %z")
+
+items_xml = []
+if not urls:
+    items_xml.append("""  <item>
+    <title>Home</title>
+    <link>https://www.cfiee-edu.com/</link>
+    <guid isPermaLink="true">https://www.cfiee-edu.com/</guid>
+    <pubDate>{}</pubDate>
+    <description>Change the status quo — economic education can change lives.</description>
+  </item>""".format(last_build))
+else:
+    for loc, lastmod in urls[:200]:
+        title = (urlparse(loc).path.strip('/') or 'Home').title()
+        pub = to_rfc2822(lastmod)
+        items_xml.append("""  <item>
+    <title>{title}</title>
+    <link>{link}</link>
+    <guid isPermaLink="true">{link}</guid>
+    <pubDate>{pub}</pubDate>
+    <description>Change the status quo — economic education can change lives.</description>
+  </item>""".format(title=escape(title), link=escape(loc), pub=pub))
+
+rss = """<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CFIEE · Council for International Economic Education</title>
+    <link>https://www.cfiee-edu.com/</link>
+    <description>Change the status quo — economic education can change lives.</description>
+    <language>de</language>
+    <lastBuildDate>{last_build}</lastBuildDate>
+    <atom:link href="{rss_url}" rel="self" type="application/rss+xml" />
+    <atom:link href="{hub_url}" rel="hub" />
+{items}
+  </channel>
+</rss>
+""".format(last_build=last_build, rss_url=RSS_PUBLIC_URL, hub_url=HUB_URL, items="\n".join(items_xml))
+
+with open("rss.xml","w",encoding="utf-8") as f:
+    f.write(rss)
+print("rss.xml generated; items:", len(items_xml))
+PY
+
+      - name: Prepare dist folder
+        run: |
+          mkdir -p dist
+          cp -f sitemap.xml resources.html robots.txt rss.xml dist/
+          if [ -f README.md ]; then cp -f README.md dist/; fi
+          ls -l dist
+
+      - name: Create and upload ZIP
+        run: |
+          cd dist
+          zip -9r ../site-files-pack.zip ./*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-files-pack
+          path: site-files-pack.zip
+          retention-days: 30
+
+  notify-after-deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.notify_after_deploy == 'true' }}
+    needs: build-and-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify PubSubHubbub Hub (assumes rss.xml is live online)
+        run: |
+          curl -sS -X POST https://pubsubhubbub.appspot.com/notify \
+               --data-urlencode "hub.mode=publish" \
+               --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
+          echo "Notified Hub."
+
+      - name: Ping Google & Bing with sitemap (assumes sitemap.xml is live)
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
+          curl -s "https://www.bing.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
+          echo "Pinged Google & Bing."
