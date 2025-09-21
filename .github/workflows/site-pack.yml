@@ -144,10 +144,7 @@ PY
     runs-on: ubuntu-latest
     steps:
       - name: Notify PubSubHubbub Hub
-        run: |
-          curl -sS -X POST https://pubsubhubbub.appspot.com/notify                --data-urlencode "hub.mode=publish"                --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
-          echo "Notified Hub."
-
+        run: curl -sS -X POST https://pubsubhubbub.appspot.com/notify --data-urlencode "hub.mode=publish" --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
       - name: Ping Google and Bing with sitemap
         run: |
           curl -s "https://www.google.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
