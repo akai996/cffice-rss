@@ -1,0 +1,35 @@
+name: Notify Hub & Ping after deploy (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      rss_url:
+        description: 'Public RSS URL to notify'
+        required: false
+        default: 'https://www.cfiee-edu.com/rss.xml'
+      sitemap_url:
+        description: 'Public sitemap URL to ping'
+        required: false
+        default: 'https://www.cfiee-edu.com/sitemap.xml'
+
+jobs:
+  notify-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show targets
+        run: |
+          echo "RSS URL: ${{ inputs.rss_url }}"
+          echo "Sitemap URL: ${{ inputs.sitemap_url }}"
+
+      - name: Notify PubSubHubbub Hub
+        run: |
+          set -euo pipefail
+          curl --fail --show-error -sS -X POST "https://pubsubhubbub.appspot.com/notify"             --data-urlencode "hub.mode=publish"             --data-urlencode "hub.url=${{ inputs.rss_url }}"
+          echo "Notified Hub."
+
+      - name: Ping Google & Bing
+        run: |
+          set -euo pipefail
+          curl --fail --show-error -s "https://www.google.com/ping?sitemap=${{ inputs.sitemap_url }}"
+          curl --fail --show-error -s "https://www.bing.com/ping?sitemap=${{ inputs.sitemap_url }}"
+          echo "Pinged Google & Bing."
