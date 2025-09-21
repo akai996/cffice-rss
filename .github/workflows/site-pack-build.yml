@@ -1,147 +1,91 @@
-name: Build RSS & Package site files (no notify)
+name: Notify Hub + Google + Bing + IndexNow (manual all-in-one)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'sitemap.xml'
-      - 'resources.html'
-      - 'robots.txt'
-      - 'README.md'
-      - '.github/workflows/site-pack-build.yml'
   workflow_dispatch:
+    inputs:
+      run_hub:
+        description: 'Notify PubSubHubbub Hub? (true/false)'
+        required: true
+        default: 'true'
+      rss_urls:
+        description: 'One or more public feed URLs to notify (one per line).'
+        required: false
+        default: 'https://www.cfiee-edu.com/rss.xml'
+      hub_url:
+        description: 'Hub endpoint'
+        required: false
+        default: 'https://pubsubhubbub.appspot.com/notify'
 
-permissions:
-  contents: write
+      sitemap_url:
+        description: 'Public sitemap URL to ping'
+        required: false
+        default: 'https://www.cfiee-edu.com/sitemap.xml'
+      run_google:
+        description: 'Ping Google? (true/false)'
+        required: true
+        default: 'true'
+      run_bing:
+        description: 'Ping Bing? (true/false)'
+        required: true
+        default: 'true'
+
+      run_indexnow:
+        description: 'Notify Bing IndexNow? (true/false)'
+        required: true
+        default: 'true'
+      indexnow_key:
+        description: 'Your IndexNow key (must also exist as TXT file in site root)'
+        required: false
+        default: '9e4e22c8217239645e4f6718bddfdc1c'
+      indexnow_endpoint:
+        description: 'IndexNow endpoint'
+        required: false
+        default: 'https://api.indexnow.org/indexnow'
 
 jobs:
-  build-and-package:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Show inputs
+        run: |
+          echo "Hub: ${{ inputs.run_hub }}"
+          echo "RSS: ${{ inputs.rss_urls }}"
+          echo "Google: ${{ inputs.run_google }}"
+          echo "Bing: ${{ inputs.run_bing }}"
+          echo "IndexNow: ${{ inputs.run_indexnow }}"
+          echo "Sitemap: ${{ inputs.sitemap_url }}"
 
-      - name: Sanity check required files
+      - name: Notify Hub
+        if: ${{ inputs.run_hub == 'true' }}
         run: |
           set -euo pipefail
-          for f in sitemap.xml resources.html robots.txt; do
-            if [ ! -f "$f" ]; then
-              echo "::error file=$f::File not found"
-              exit 1
-            fi
+          HUB="${{ inputs.hub_url }}"
+          for URL in ${{ inputs.rss_urls }}; do
+            echo "Notifying hub for $URL"
+            curl -sS -X POST "$HUB"               --data-urlencode "hub.mode=publish"               --data-urlencode "hub.url=${URL}"
           done
-          echo "Required files exist."
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Ensure zip is available
+      - name: Ping Google
+        if: ${{ inputs.run_google == 'true' }}
         run: |
           set -euo pipefail
-          if ! command -v zip >/dev/null 2>&1; then
-            sudo apt-get update -y
-            sudo apt-get install -y zip
-          fi
-          zip -v >/dev/null 2>&1 || true
+          SITEMAP="${{ inputs.sitemap_url }}"
+          curl -sS "https://www.google.com/ping?sitemap=${SITEMAP}" || echo "Google ping may not return 200"
 
-      - name: Generate rss.xml from local sitemap.xml
+      - name: Ping Bing
+        if: ${{ inputs.run_bing == 'true' }}
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import datetime
-          import xml.etree.ElementTree as ET
-          from urllib.parse import urlparse
-          from xml.sax.saxutils import escape
+          SITEMAP="${{ inputs.sitemap_url }}"
+          curl -sS "https://www.bing.com/ping?sitemap=${SITEMAP}"
 
-          SITEMAP_PATH = "sitemap.xml"
-          RSS_PUBLIC_URL = "https://www.cfiee-edu.com/rss.xml"
-          HUB_URL = "https://pubsubhubbub.appspot.com/"
-
-          root = ET.parse(SITEMAP_PATH).getroot()
-          ns = {"sm": "https://www.sitemaps.org/schemas/sitemap/0.9"}
-
-          urls = []
-          for u in root.findall("sm:url", ns):
-              loc = (u.findtext("sm:loc", default="", namespaces=ns) or "").strip()
-              lastmod = (u.findtext("sm:lastmod", default="", namespaces=ns) or "").strip()
-              if loc:
-                  urls.append((loc, lastmod))
-
-          tz = datetime.timezone(datetime.timedelta(hours=8))
-          now = datetime.datetime.now(tz)
-
-          def to_rfc2822(d):
-              try:
-                  dt = datetime.datetime.strptime(d[:10], "%Y-%m-%d").replace(tzinfo=tz)
-              except Exception:
-                  dt = now
-              return dt.strftime("%a, %d %b %Y %H:%M:%S %z")
-
-          items = []
-          for loc, lastmod in urls[:200]:
-              path_title = urlparse(loc).path.strip('/') or 'Home'
-              title = path_title.replace('-', ' ').replace('_', ' ').title()
-              pub = to_rfc2822(lastmod)
-              items.append(
-                  "  <item>\n"
-                  f"    <title>{escape(title)}</title>\n"
-                  f"    <link>{escape(loc)}</link>\n"
-                  f"    <guid isPermaLink=\"true\">{escape(loc)}</guid>\n"
-                  f"    <pubDate>{pub}</pubDate>\n"
-                  f"    <description>{escape('Change the status quo - economic education can change lives.')}</description>\n"
-                  "  </item>"
-              )
-
-          now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S %z")
-          rss_head = (
-              '<?xml version="1.0" encoding="UTF-8"?>\n'
-              '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
-              '  <channel>\n'
-              '    <title>CFIEE - Council for International Economic Education</title>\n'
-              '    <link>https://www.cfiee-edu.com/</link>\n'
-              f'    <description>{escape("Change the status quo - economic education can change lives.")}</description>\n'
-              '    <language>en</language>\n'
-              f'    <lastBuildDate>{now_rfc2822}</lastBuildDate>\n'
-              f'    <atom:link href="{RSS_PUBLIC_URL}" rel="self" type="application/rss+xml" />\n'
-              f'    <atom:link href="{HUB_URL}" rel="hub" />\n'
-          )
-
-          rss = rss_head + '\n'.join(items) + '\n  </channel>\n</rss>\n'
-          with open("rss.xml", "w", encoding="utf-8") as f:
-              f.write(rss)
-          print("rss.xml generated with", len(items), "items")
-          PY
-
-      - name: Prepare dist folder (include README if exists)
+      - name: Notify IndexNow
+        if: ${{ inputs.run_indexnow == 'true' }}
         run: |
           set -euo pipefail
-          mkdir -p dist
-          cp -f sitemap.xml resources.html robots.txt rss.xml dist/
-          if [ -f README.md ]; then cp -f README.md dist/; fi
-          ls -l dist
-
-      - name: Upload artifacts (single files)
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-files
-          path: |
-            dist/rss.xml
-            dist/sitemap.xml
-            dist/resources.html
-            dist/robots.txt
-            dist/README.md
-          if-no-files-found: ignore
-          retention-days: 30
-
-      - name: Create and upload ZIP
-        run: |
-          set -euo pipefail
-          cd dist
-          zip -9r ../site-files-pack.zip ./*
-      - uses: actions/upload-artifact@v4
-        with:
-          name: site-files-pack
-          path: site-files-pack.zip
-          retention-days: 30
+          SITEMAP="${{ inputs.sitemap_url }}"
+          KEY="${{ inputs.indexnow_key }}"
+          ENDPOINT="${{ inputs.indexnow_endpoint }}"
+          BODY=$(jq -nc --arg host "$(echo $SITEMAP | awk -F/ '{print $3}')"                         --arg key "$KEY"                         --argjson urls "[\"$SITEMAP\"]"                         '{host:$host, key:$key, urlList:$urls}')
+          echo "Sending IndexNow notification"
+          curl -sS -X POST -H "Content-Type: application/json" --data "$BODY" "$ENDPOINT"
