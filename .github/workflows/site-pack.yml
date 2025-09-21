@@ -1,4 +1,4 @@
-name: Build RSS & Package (zip only) + optional notify
+name: Build RSS and Package Zip
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       notify_after_deploy:
-        description: 'Set true AFTER ops deployed to site to notify Hub + ping search engines'
+        description: 'Set true AFTER ops deployed to site to notify Hub and ping search engines'
         required: false
         default: 'false'
 
@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate rss.xml from local sitemap.xml (robust)
+      - name: Generate rss.xml from sitemap.xml
         run: |
           python - <<'PY'
 import sys, datetime
@@ -110,7 +110,7 @@ rss=f"""<?xml version="1.0" encoding="UTF-8"?>
     <title>CFIEE · Council for International Economic Education</title>
     <link>https://www.cfiee-edu.com/</link>
     <description>Change the status quo — economic education can change lives.</description>
-    <language>de</language>
+    <language>en</language>
     <lastBuildDate>{last_build}</lastBuildDate>
     <atom:link href="{RSS_PUBLIC_URL}" rel="self" type="application/rss+xml" />
     <atom:link href="{HUB_URL}" rel="hub" />
@@ -143,14 +143,13 @@ PY
     needs: build_and_pack
     runs-on: ubuntu-latest
     steps:
-      - name: Notify PubSubHubbub Hub (rss.xml must be live)
+      - name: Notify PubSubHubbub Hub
         run: |
-          curl -sS -X POST https://pubsubhubbub.appspot.com/notify \
-               --data-urlencode "hub.mode=publish" \
-               --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
+          curl -sS -X POST https://pubsubhubbub.appspot.com/notify                --data-urlencode "hub.mode=publish"                --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
           echo "Notified Hub."
-      - name: Ping Google & Bing (sitemap must be live)
+
+      - name: Ping Google and Bing with sitemap
         run: |
           curl -s "https://www.google.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
           curl -s "https://www.bing.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
-          echo "Pinged Google & Bing."
+          echo "Pinged Google and Bing."
