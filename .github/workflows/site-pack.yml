@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       notify_after_deploy:
-        description: '运维已部署到官网后，是否通知 Hub + Ping 搜索引擎？(true/false)'
+        description: 'Notify Hub + ping search engines after ops has deployed the site? (true/false)'
         required: false
         default: 'false'
 
@@ -28,33 +28,143 @@ jobs:
 
       - name: Sanity check required files
         run: |
+          set -euo pipefail
           for f in sitemap.xml resources.html robots.txt; do
-            [ -f "$f" ] || { echo "::error file=$f::File not found"; exit 1; }
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::File not found"
+              exit 1
+            fi
           done
+          echo "Required files exist."
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - name: Ensure zip is available
+        run: |
+          set -euo pipefail
+          if ! command -v zip >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y zip
+          fi
+          zip -v >/dev/null 2>&1 || true
+
       - name: Generate rss.xml from local sitemap.xml
         run: |
+          set -euo pipefail
           python - <<'PY'
-import datetime, xml.etree.ElementTree as ET
-from urllib.parse import urlparse
-from xml.sax.saxutils import escape
+          import datetime
+          import xml.etree.ElementTree as ET
+          from urllib.parse import urlparse
+          from xml.sax.saxutils import escape
 
-SITEMAP_PATH = "sitemap.xml"
-RSS_PUBLIC_URL = "https://www.cfiee-edu.com/rss.xml"
-HUB_URL = "https://pubsubhubbub.appspot.com/"
+          SITEMAP_PATH = "sitemap.xml"
+          RSS_PUBLIC_URL = "https://www.cfiee-edu.com/rss.xml"
+          HUB_URL = "https://pubsubhubbub.appspot.com/"
 
-root = ET.parse(SITEMAP_PATH).getroot()
-ns = {"sm":"http://www.sitemaps.org/schemas/sitemap/0.9"}
-urls=[]
-for u in root.findall("sm:url", ns):
-    loc = (u.findtext("sm:loc", default="", namespaces=ns) or "").strip()
-    lastmod = (u.findtext("sm:lastmod", default="", namespaces=ns) or "").strip()
-    if loc:
-        urls.append((loc,lastmod))
+          root = ET.parse(SITEMAP_PATH).getroot()
+          ns = {"sm": "https://www.sitemaps.org/schemas/sitemap/0.9"}
 
-tz = datetime.timezone(datetime.t
+          urls = []
+          for u in root.findall("sm:url", ns):
+              loc = (u.findtext("sm:loc", default="", namespaces=ns) or "").strip()
+              lastmod = (u.findtext("sm:lastmod", default="", namespaces=ns) or "").strip()
+              if loc:
+                  urls.append((loc, lastmod))
+
+          tz = datetime.timezone(datetime.timedelta(hours=8))
+          now = datetime.datetime.now(tz)
+
+          def to_rfc2822(d):
+              try:
+                  dt = datetime.datetime.strptime(d[:10], "%Y-%m-%d").replace(tzinfo=tz)
+              except Exception:
+                  dt = now
+              return dt.strftime("%a, %d %b %Y %H:%M:%S %z")
+
+          items = []
+          for loc, lastmod in urls[:200]:
+              path_title = urlparse(loc).path.strip('/') or 'Home'
+              title = path_title.replace('-', ' ').replace('_', ' ').title()
+              pub = to_rfc2822(lastmod)
+              items.append(
+                  "  <item>\n"
+                  f"    <title>{escape(title)}</title>\n"
+                  f"    <link>{escape(loc)}</link>\n"
+                  f"    <guid isPermaLink=\"true\">{escape(loc)}</guid>\n"
+                  f"    <pubDate>{pub}</pubDate>\n"
+                  f"    <description>{escape('Change the status quo - economic education can change lives.')}</description>\n"
+                  "  </item>"
+              )
+
+          now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S %z")
+          rss_head = (
+              '<?xml version="1.0" encoding="UTF-8"?>\n'
+              '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+              '  <channel>\n'
+              '    <title>CFIEE - Council for International Economic Education</title>\n'
+              '    <link>https://www.cfiee-edu.com/</link>\n'
+              f'    <description>{escape("Change the status quo - economic education can change lives.")}</description>\n'
+              '    <language>en</language>\n'
+              f'    <lastBuildDate>{now_rfc2822}</lastBuildDate>\n'
+              f'    <atom:link href="{RSS_PUBLIC_URL}" rel="self" type="application/rss+xml" />\n'
+              f'    <atom:link href="{HUB_URL}" rel="hub" />\n'
+          )
+
+          rss = rss_head + '\n'.join(items) + '\n  </channel>\n</rss>\n'
+          with open("rss.xml", "w", encoding="utf-8") as f:
+              f.write(rss)
+          print("rss.xml generated with", len(items), "items")
+          PY
+
+      - name: Prepare dist folder (include README if exists)
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp -f sitemap.xml resources.html robots.txt rss.xml dist/
+          if [ -f README.md ]; then cp -f README.md dist/; fi
+          ls -l dist
+
+      - name: Upload artifacts (single files)
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-files
+          path: |
+            dist/rss.xml
+            dist/sitemap.xml
+            dist/resources.html
+            dist/robots.txt
+            dist/README.md
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Create and upload ZIP
+        run: |
+          set -euo pipefail
+          cd dist
+          zip -9r ../site-files-pack.zip ./*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-files-pack
+          path: site-files-pack.zip
+          retention-days: 30
+
+  notify-after-deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.notify_after_deploy == 'true' }}
+    needs: build-and-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify PubSubHubbub Hub (assumes rss.xml is live online)
+        run: |
+          set -euo pipefail
+          curl --fail --show-error -sS -X POST "https://pubsubhubbub.appspot.com/notify"             --data-urlencode "hub.mode=publish"             --data-urlencode "hub.url=https://www.cfiee-edu.com/rss.xml"
+          echo "Notified Hub."
+
+      - name: Ping Google & Bing with sitemap (assumes sitemap.xml is live)
+        run: |
+          set -euo pipefail
+          curl --fail --show-error -s "https://www.google.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
+          curl --fail --show-error -s "https://www.bing.com/ping?sitemap=https://www.cfiee-edu.com/sitemap.xml"
+          echo "Pinged Google & Bing."
