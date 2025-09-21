@@ -1,5 +1,5 @@
 # robots.txt for https://www.cfiee-edu.com/
-# Last updated: 2025-09-19 (Asia/Taipei)
+# Last updated: 2025-09-21 (Asia/Taipei)
 
 # Default rules
 User-agent: *
@@ -29,8 +29,12 @@ Allow: /*.woff2$
 # Explicitly allow the public resources aggregation page
 Allow: /resources.html
 
-# Be nice to Bing (Google ignores Crawl-delay)
+# Explicit allow for major crawlers
+User-agent: Googlebot
+Allow: /
+
 User-agent: Bingbot
+Allow: /
 Crawl-delay: 5
 
 # Sitemaps
